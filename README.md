@@ -1,0 +1,1 @@
+Simple app that finds the shortest path between two points on a grid-like plane
