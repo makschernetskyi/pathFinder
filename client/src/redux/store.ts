@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit"
+import thunkMiddleware from 'redux-thunk';
 import {Reducer, Store} from 'redux';
 import {AppReducer} from "./AppSlice";
 
@@ -11,7 +12,14 @@ const rootReducer: RootReducer = {
 }
 
 const store: Store = configureStore({
-	reducer: rootReducer
+	reducer: rootReducer,
+	middleware: [thunkMiddleware]
 })
 
+
+export type RootState = ReturnType<typeof store.getState>
+
+export type AppDispatch = typeof store.dispatch
+
 export {store};
+

@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice, Slice, ActionReducerMapBuilder, Reducer} from "@reduxjs/toolkit";
-
+import { createAsyncThunk, AsyncThunk, createSlice, Slice, ActionReducerMapBuilder, Reducer} from "@reduxjs/toolkit";
+import axios, {CancelTokenSource} from "axios";
 
 
 export interface AppState {
@@ -23,6 +23,23 @@ type ChangeMarkupModeAction = {
 		mode: string
 	}
 }
+
+
+export const getSolution = createAsyncThunk(
+	'app/getSolution',
+	async (data: {field: number[][], source: CancelTokenSource }, {rejectWithValue})=>{
+		try{
+			console.log('requested')
+			return 'data';
+		}catch(err){
+			return rejectWithValue(err)
+		}
+	}
+)
+
+
+
+
 
 const initialState: AppState = {
 	mode: 'start',
@@ -54,6 +71,16 @@ const AppSlice: Slice = createSlice({
 		}
 	},
 	extraReducers: (builder:ActionReducerMapBuilder<AppState>): void => {
+		builder
+			.addCase(getSolution.pending,(state,action)=>{
+
+			})
+			.addCase(getSolution.fulfilled,(state,action)=>{
+
+			})
+			.addCase(getSolution.rejected,(state,action)=>{
+
+			})
 	}
 })
 

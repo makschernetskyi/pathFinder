@@ -1,14 +1,18 @@
 import react, {MouseEventHandler, useEffect, useRef, useState} from 'react';
-import {useDispatch, useSelector} from "react-redux"
 import styles from './App.module.sass';
 import {Canvas, getRealMousePos} from "./canvasTools";
-import {changeMarkupMode, fillFieldCell} from "../redux/AppSlice";
+import {changeMarkupMode, fillFieldCell, getSolution} from "../redux/AppSlice";
+import axios, {CancelTokenSource} from "axios";
+import {RootState} from "../redux/store";
+import {useAppDispatch, useAppSelector} from "../hooks";
+import {useDispatch} from "react-redux";
 
 
 
 export const App = () =>{
-	const dispatch = useDispatch() ;
-	const {field} = useSelector((state:any)=>state.App)
+	//type of dispatch needs to be changed!!!
+	const dispatch = useDispatch<any>();
+	const {field} = useAppSelector((state:RootState)=>state.App)
 	const canvasRef: react.MutableRefObject<any> = useRef();
 	const [canvas, setCanvas]: Array<Canvas|any> = useState();
 
@@ -36,6 +40,12 @@ export const App = () =>{
 		dispatch(changeMarkupMode({mode:'obstacle'}))
 	}
 
+	const handleSolveClick = ():void=>{
+		const source: CancelTokenSource = axios.CancelToken.source()
+		const data: {field: number[][], source: CancelTokenSource} = {field: field, source: source};
+		dispatch(getSolution(data));
+	}
+
 	useEffect(() => {
 		if(canvasRef.current) {
 			setCanvas(new Canvas(canvasRef.current, 1000))
@@ -59,7 +69,7 @@ export const App = () =>{
 				<button className={styles.modebtn} onClick={handleEndBtnClick}>set end</button>
 				<button className={styles.modebtn} onClick={handleObstacleBtnClick}>set obstacles</button>
 			</div>
-			<button className={styles.findBtn}>
+			<button className={styles.findBtn} onClick={handleSolveClick}>
 				find!
 			</button>
 		</>
