@@ -13,7 +13,11 @@ const rootReducer: RootReducer = {
 
 const store: Store = configureStore({
 	reducer: rootReducer,
-	middleware: [thunkMiddleware]
+	middleware: getDefaultMiddleware =>
+		getDefaultMiddleware()
+		.prepend(
+			thunkMiddleware
+		).concat()
 })
 
 

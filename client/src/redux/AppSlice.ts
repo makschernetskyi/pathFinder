@@ -1,6 +1,8 @@
 import { createAsyncThunk, AsyncThunk, createSlice, Slice, ActionReducerMapBuilder, Reducer} from "@reduxjs/toolkit";
-import axios, {CancelTokenSource} from "axios";
+import axios, {CancelTokenSource, AxiosResponse} from "axios";
 
+
+const API_URL_PREFIX : string = 'http://localhost:3000/api/v0'
 
 export interface AppState {
 	mode: string,
@@ -29,10 +31,26 @@ export const getSolution = createAsyncThunk(
 	'app/getSolution',
 	async (data: {field: number[][], source: CancelTokenSource }, {rejectWithValue})=>{
 		try{
-			console.log('requested')
-			return 'data';
+			const requestData: string =  JSON.stringify({field: data.field})
+
+			const response : AxiosResponse = await axios({
+				url: API_URL_PREFIX + '/path',
+				method: 'post',
+				headers: { "Content-Type": "application/json" },
+				data: requestData,
+				cancelToken: data.source.token
+			}).catch(error=>{
+				throw new Error(error)
+			})
+
+			// console.log(response.data)
+			return response.data;
 		}catch(err){
-			return rejectWithValue(err)
+			let msg = ''
+			if ( err instanceof Error ){
+				msg = err.message
+			}
+			return rejectWithValue(msg)
 		}
 	}
 )
@@ -79,7 +97,7 @@ const AppSlice: Slice = createSlice({
 
 			})
 			.addCase(getSolution.rejected,(state,action)=>{
-
+				console.log(action.payload)
 			})
 	}
 })

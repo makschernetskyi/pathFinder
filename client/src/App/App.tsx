@@ -4,15 +4,14 @@ import {Canvas, getRealMousePos} from "./canvasTools";
 import {changeMarkupMode, fillFieldCell, getSolution} from "../redux/AppSlice";
 import axios, {CancelTokenSource} from "axios";
 import {RootState} from "../redux/store";
-import {useAppDispatch, useAppSelector} from "../hooks";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "../hooks";
 
 
 
-export const App = () =>{
-	//type of dispatch needs to be changed!!!
-	const dispatch = useDispatch<any>();
-	const {field} = useAppSelector((state:RootState)=>state.App)
+export const App: react.FC = () =>{
+
+	const dispatch = useDispatch();
+	const {field} = useSelector((state:RootState)=>state.App)
 	const canvasRef: react.MutableRefObject<any> = useRef();
 	const [canvas, setCanvas]: Array<Canvas|any> = useState();
 
@@ -26,7 +25,6 @@ export const App = () =>{
 		const field_coords : {x: number, y: number } = {x: Math.floor(mouse.x/step), y: Math.floor(mouse.y/step)}
 		dispatch(fillFieldCell(field_coords))
 		canvas.renderFromField(field, step)
-		//canvas.fillCell(Math.floor(mouse.x/step), Math.floor(mouse.y/step), step)
 
 	}
 
@@ -51,7 +49,6 @@ export const App = () =>{
 			setCanvas(new Canvas(canvasRef.current, 1000))
 		}
 		if(canvas){
-			console.log(canvas)
 			canvas.drawGrid(100)
 		}
 	}, [canvasRef.current]);
