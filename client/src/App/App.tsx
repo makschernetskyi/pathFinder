@@ -11,7 +11,7 @@ import {useDispatch, useSelector} from "../hooks";
 export const App: react.FC = () =>{
 
 	const dispatch = useDispatch();
-	const {field, status} = useSelector((state:RootState)=>state.App)
+	const {field, status, error} = useSelector((state:RootState)=>state.App)
 	const canvasRef: react.MutableRefObject<any> = useRef();
 	const [canvas, setCanvas]: Array<Canvas|any> = useState();
 	const [readonly, setReadonly]: [boolean,any] = useState(false);
@@ -74,6 +74,11 @@ export const App: react.FC = () =>{
 		}
 	}, [status]);
 
+	useEffect(() => {
+		if(error){
+			alert(error)
+		}
+	}, [error]);
 
 	useEffect(() => {
 		return () => {

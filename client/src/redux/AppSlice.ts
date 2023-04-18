@@ -115,6 +115,7 @@ const AppSlice: Slice = createSlice({
 		builder
 			.addCase(getSolution.pending,(state,action)=>{
 				state.status = 'pending'
+				state.error = ''
 			})
 			.addCase(getSolution.fulfilled,(state,action)=>{
 				state.status = 'resolved'
@@ -128,7 +129,7 @@ const AppSlice: Slice = createSlice({
 			.addCase(getSolution.rejected,(state,action : PayloadAction<any, string>)=>{
 				state.status = 'rejected'
 				state.error = action.payload
-				console.log(action.payload)
+				console.error(action.payload)
 			})
 	}
 })
