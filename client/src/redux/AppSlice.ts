@@ -60,6 +60,9 @@ export const getSolution = createAsyncThunk(
 			})
 
 			console.log(response.data)
+			if(!response.data.path.length){
+				return rejectWithValue('path is impossible')
+			}
 			return response.data;
 		}catch(err){
 			let msg = ''

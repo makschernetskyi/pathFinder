@@ -111,6 +111,9 @@ export function constructPath(field: number[][]): [number, number][] {
 
 		const minNeighbour = getMinNeighbour(Neighbours, field)
 		console.log(minNeighbour)
+		if(field[nextCell[0]][nextCell[1]] <= field[minNeighbour[0]][minNeighbour[1]]){
+			return []
+		}
 		nextCell = [minNeighbour[0], minNeighbour[1]];
 		// if (path.some(cell => cell.toString() == nextCell.toString())) {
 		// 	console.log(Neighbours)
