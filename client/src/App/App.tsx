@@ -1,7 +1,7 @@
 import react, {MouseEventHandler, useEffect, useRef, useState} from 'react';
 import styles from './App.module.sass';
 import {Canvas, getRealMousePos} from "./canvasTools";
-import {changeMarkupMode, fillFieldCell, getSolution} from "../redux/AppSlice";
+import {changeMarkupMode, clearField, fillFieldCell, getSolution} from "../redux/AppSlice";
 import axios, {CancelTokenSource} from "axios";
 import {RootState} from "../redux/store";
 import {useDispatch, useSelector} from "../hooks";
@@ -11,16 +11,21 @@ import {useDispatch, useSelector} from "../hooks";
 export const App: react.FC = () =>{
 
 	const dispatch = useDispatch();
-	const {field} = useSelector((state:RootState)=>state.App)
+	const {field, status} = useSelector((state:RootState)=>state.App)
 	const canvasRef: react.MutableRefObject<any> = useRef();
 	const [canvas, setCanvas]: Array<Canvas|any> = useState();
+	const [readonly, setReadonly]: [boolean,any] = useState(false);
+	const source: CancelTokenSource = axios.CancelToken.source()
 
 	const canvasWidth: number = 1000
-	const step: number = canvasWidth/10
+	const fieldWidth : number = 10
+	const step: number = canvasWidth/fieldWidth
 
 	const handleCanvasClick: MouseEventHandler = (event: react.MouseEvent): void =>{
+
+		if(readonly) return
+
 		const canvasElement: HTMLElement = canvasRef.current;
-		const drawingMode: string = 'start'
 		const mouse = getRealMousePos(canvasElement, event, canvasWidth);
 		const field_coords : {x: number, y: number } = {x: Math.floor(mouse.x/step), y: Math.floor(mouse.y/step)}
 		dispatch(fillFieldCell(field_coords))
@@ -39,9 +44,13 @@ export const App: react.FC = () =>{
 	}
 
 	const handleSolveClick = ():void=>{
-		const source: CancelTokenSource = axios.CancelToken.source()
 		const data: {field: number[][], source: CancelTokenSource} = {field: field, source: source};
 		dispatch(getSolution(data));
+	}
+
+	const handleClearClick = ()=>{
+		dispatch(clearField({}))
+		setReadonly(false)
 	}
 
 	useEffect(() => {
@@ -58,6 +67,21 @@ export const App: react.FC = () =>{
 			canvas.renderFromField(field, step)
 	}, [field]);
 
+	useEffect(() => {
+		if(status === 'resolved'){
+			canvas.renderFromField(field, step, false)
+			setReadonly(true)
+		}
+	}, [status]);
+
+
+	useEffect(() => {
+		return () => {
+			source.cancel()
+		};
+	}, []);
+
+
 	return (
 		<>
 			<canvas ref={canvasRef} className={styles.Canvas} width="1000" height="1000" onClick={handleCanvasClick}/>
@@ -66,6 +90,9 @@ export const App: react.FC = () =>{
 				<button className={styles.modebtn} onClick={handleEndBtnClick}>set end</button>
 				<button className={styles.modebtn} onClick={handleObstacleBtnClick}>set obstacles</button>
 			</div>
+			<button className={styles.clearBtn} onClick={handleClearClick}>
+				clear
+			</button>
 			<button className={styles.findBtn} onClick={handleSolveClick}>
 				find!
 			</button>
