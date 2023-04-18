@@ -19,9 +19,10 @@ export class Canvas{
 
 	}
 
-	drawGrid(step:number){
+	drawGrid(step:number, color: string = '#000000'){
 		const ctx = this.ctx;
 		const side:number = this.width;
+		ctx.strokeStyle = color;
 		for(let i = step; i<side; i+=step){
 			ctx.beginPath()
 			ctx.moveTo(i,0)
@@ -77,6 +78,36 @@ export class Canvas{
 		}
 		if(grid)
 			this.drawGrid(step)
+	}
+	renderPathFromField(field: number[][], step: number, grid: boolean = true){
+		const ctx = this.ctx;
+		const side: number = this.width;
+		const fieldWidth: number = this.width/step;
+		const endMarker = fieldWidth**2
+		const startMarker : number = 0
+		const obstacleMarker: number = -2
+		const pathMarker: number = -3
+
+
+		ctx.clearRect(0,0,side,side)
+		if(grid)
+			this.drawGrid(step, "#ee0000")
+		for(let i:number=0, max_i:number =field.length; i<max_i; i++){
+			for(let j:number=0, max_j:number =field[0].length; j<max_j; j++){
+				if(field[i][j]===obstacleMarker){
+					this.fillCell(i,j,step, '#aa1100')
+				}else if(field[i][j]===startMarker){
+					this.fillCell(i,j,step, 'rgba(0, 50, 154, 0.8)')
+				}else if(field[i][j]===endMarker){
+					this.fillCell(i,j,step, 'rgba(0, 50, 154, 0.8)')
+				}else if(field[i][j]===pathMarker){
+					this.fillCell(i,j,step, 'rgba(0, 135, 255, 0.6)')
+				}else{
+					// this.fillCell(i,j,step, 'rgba(255, 0, 39, 0.55)')
+				}
+			}
+		}
+
 	}
 }
 

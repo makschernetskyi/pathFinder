@@ -69,7 +69,7 @@ export const App: react.FC = () =>{
 
 	useEffect(() => {
 		if(status === 'resolved'){
-			canvas.renderFromField(field, step, false)
+			canvas.renderPathFromField(field, step, true)
 			setReadonly(true)
 		}
 	}, [status]);
