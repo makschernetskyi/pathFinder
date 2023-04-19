@@ -90,17 +90,19 @@ export const App: react.FC = () =>{
 	return (
 		<>
 			<canvas ref={canvasRef} className={styles.Canvas} width="1000" height="1000" onClick={handleCanvasClick}/>
-			<div className={styles.modeBtns}>
+			<div className={styles.ModeBtns}>
 				<button className={styles.modebtn} onClick={handleStartBtnClick}>set start</button>
 				<button className={styles.modebtn} onClick={handleEndBtnClick}>set end</button>
 				<button className={styles.modebtn} onClick={handleObstacleBtnClick}>set obstacles</button>
 			</div>
-			<button className={styles.clearBtn} onClick={handleClearClick}>
-				clear
-			</button>
-			<button className={styles.findBtn} onClick={handleSolveClick}>
-				find!
-			</button>
+			<div className={styles.ActionBtns}>
+				<button className={styles.clearBtn} onClick={handleClearClick}>
+					clear
+				</button>
+				<button className={styles.findBtn} onClick={handleSolveClick}>
+					find!
+				</button>
+			</div>
 		</>
 	)
 }
